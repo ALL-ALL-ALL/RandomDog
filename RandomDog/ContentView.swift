@@ -12,9 +12,12 @@ struct ContentView: View {
         VStack {
             
             ZStack {
+                Color(.yellow)
+
                 
-                
-                Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                Button(action: {
+                    // ACTion à mettre dedans
+                }, label: {
                     
                     
                     ZStack {
@@ -37,8 +40,9 @@ struct ContentView: View {
                
 
                 
-            }
+            } // Zstack
         } // fin  vstack
+        .ignoresSafeArea()
         
         
         
