@@ -1,62 +1,106 @@
-//
-//  ContentView.swift
-//  RandomDog
-//
-//  Created by  Ixart on 27/03/2024.
-//
-
 import SwiftUI
 
+struct DogImageResponse: Codable {
+    let message: String
+    let status: String
+}
+
 struct ContentView: View {
+    @State private var imageURL: URL?
+
     var body: some View {
         VStack {
-            
             ZStack {
                 Color(.yellow)
-
+                // Affichage de l'image avec un indicateur de chargement
                 
-                Button(action: {
-                    // ACTion à mettre dedans
-                }, label: {
-                    
-                    
-                    ZStack {
-                        Rectangle()
-                            .frame(width: 150, height: 80)
-                            .foregroundColor(.black)
-                            .cornerRadius(40)
+                if let imageURL = imageURL {
+                    AsyncImage(url: imageURL) { image in
+                        image
                         
-                        Image(systemName: "dog")
-                            .font(.system(size: 40))
-                            .foregroundColor(.white)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                           
+                            .clipped()
+
+                    } placeholder: {
+                        ProgressView()
+                    }
+                } else {
+                    Text("Loading image...")
+                        .padding()
+                }
+
+                // Bouton pour charger une nouvelle image de chien
+                
+                Button(action: {fetchRandomDogImage()}, label: {
+                    ZStack {
+                               Rectangle()
+                                   .frame(width: 150, height: 80)
+                                   .foregroundColor(.black)
+                                   .cornerRadius(40)
+                                           
+                               Image(systemName: "dog")
+                                   .font(.system(size: 40))
+                                   .foregroundColor(.white)
 
                     } // fin zstack
+                    .padding(.top,500)
                     
-                }) // FIN LABEL
-                
-               
-
-                
-               
-
-                
-            } // Zstack
-        } // fin  vstack
+                })
+                .padding()
+             
+            } // FIN Zstack
+        } // FIN VSTACK
+        
+        
+        
+        .onAppear {
+            fetchRandomDogImage() // Chargez une image aléatoire lorsque la vue apparaît pour la première fois
+            
+        } // fin on appear
         .ignoresSafeArea()
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-    } // fin body
-} // fin strcut
+    } // fin de body
+    
+    
+    
+    
+    
+    
 
+    // Fonction pour récupérer une image de chien aléatoire à partir de l'API de chien
+    
+    func fetchRandomDogImage() {
+        guard let url = URL(string: "https://dog.ceo/api/breeds/image/random") else {
+            print("Invalid URL")
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data,
+                  let decodedData = try? JSONDecoder().decode(DogImageResponse.self, from: data) else {
+                print("Failed to decode data")
+                return
+            }
+            DispatchQueue.main.async {
+                self.imageURL = URL(string: decodedData.message)
+            }
+        }.resume()
+        
+    } // fin de la fetch
+    
+    
+    
+    
+    
+    
+    
+    
+    
+} // fin struct
 #Preview {
     ContentView()
 }
