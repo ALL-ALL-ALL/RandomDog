@@ -1,4 +1,4 @@
-# RandomDog
+# RandomDog🐾
 
 ## À propos de ce projet
 Ce projet a été réalisé comme exercice pratique de développement iOS en SwiftUI, visant à maîtriser les appels API et l'affichage d'images dans une application mobile.
